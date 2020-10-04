@@ -66,6 +66,8 @@ namespace Hangfire.Controllers
                     await picture.CopyToAsync(stream);
                 }
                 string jobID = BackgroundJobs.DelayedJobs.AddWatermark(newFileName, "www.bedinuratascan.com");
+
+                BackgroundJobs.ContinuationsJobs.WriteWatermarkStatusJob(jobID, newFileName);
             }
             return View();
         }

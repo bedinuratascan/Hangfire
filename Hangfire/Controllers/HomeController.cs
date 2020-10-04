@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Hangfire.Models;
 using Hangfire.BackgroundJobs;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Hangfire.Controllers
 {
@@ -39,6 +41,32 @@ namespace Hangfire.Controllers
         {
             FireAndForgetJobs.SendEmailToUserJob("12359778", "Welcome to my blog");
 
+            return View();
+        }
+
+        public IActionResult PictureSave()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PictureSave(IFormFile picture)
+        {
+            string newFileName = String.Empty;
+
+            if(picture!=null && picture.Length > 0)
+            {
+                newFileName = Guid.NewGuid().ToString() + Path.GetExtension(picture.FileName);
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/pictures/watermarks", newFileName);
+
+                using(var stream=new FileStream(path, FileMode.Create))
+                {
+                    await picture.CopyToAsync(stream);
+                }
+                string jobID = BackgroundJobs.DelayedJobs.AddWatermark(newFileName, "www.bedinuratascan.com");
+            }
             return View();
         }
     }

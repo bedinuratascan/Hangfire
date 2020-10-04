@@ -20,7 +20,7 @@ namespace Hangfire.Services
         {
             var apiKey = _configuration.GetSection("APIs")["SendGridApi"];
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("bedinuratascan@gmial.com", "Example User");
+            var from = new EmailAddress("bedinuratascan@gmail.com", "Example User");
             var subject = "Welcome to www.bedinuratascan.com !";
             var to = new EmailAddress("bedinuratascan@gmail.com", "Example User");
             //var plainTextContent = "and easy to do anywhere, even with C#";
